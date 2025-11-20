@@ -8,6 +8,7 @@
 - Programming languages I like: C++, Python and R
 - Programming languages I dislike: Java, Javascript
 ## On to the fun part... GIT :D:
+TODO: Add summary of functionality
 ### Useful commands and select flags:
 
 - git clone [\[repository URL\]](https://github.com/Bartosz-Kadziolka/BT4BR_Assigment) - clones a repository
