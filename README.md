@@ -27,6 +27,7 @@
 - git commands in the terminal
 - git wrappers such as [GitHub Desktop](https://desktop.github.com/download/), [Fork](https://git-fork.com/), and others
 - [GitHub web client](https://github.com/) and others
+- git integration within text editors [Visual Studio](https://visualstudio.microsoft.com/pl/), [Visual Studio Code](https://code.visualstudio.com/)
 
 ### Useful commands and select flags:
 
