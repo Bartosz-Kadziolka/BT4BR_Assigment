@@ -1,0 +1,120 @@
+---
+title: "BT4BR Assignment 7"
+author: 
+  name: Bartosz Kądziołka
+  date: 05.12.2025
+  tidy: false
+format: 
+  html:
+      embed-resources: true
+      theme: cerulean
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+## Assignment 7:
+
+Use **tidyr** and **dplyr** libraries whenever possible, to do the
+following:
+
+**Task 1:** Load the "iris" dataset and transform it to longer.
+
+-   tip: you should get 3 columns Species \| Trait \| Size
+
+**Task 2:** Answer the following questions.
+
+-   tip: you can answer each question "piping" only 2-3 commands
+
+**Task 2.1:** What is the **mean** **length** and **width** of the
+**sepal** and **petal** of each species?
+
+**Task 2.2:** What is the **largest** and **widest**,  **petal** and
+**sepal,**  of **virginica** and **versicolor** species?
+
+**Task 2.3:** For each species, for sepal and petal width and length,
+how many observations are above the mean?\*
+
+-   tip: adding the means as column might help
+
+**\***Might seem difficult (it is not that difficult if you know the
+tricks ;) ). If you don't manage to make it work, submit your best
+attempts and we will discuss it in class.
+
+**Task 3:** Deliver a link to GitHub containing the a **Quarto** file
+and the compiled **HTML**. It should contain explanations of what each
+chunk does. If you have private repository, remember to send me
+invitation so I can access it.
+
+# **Task 1**
+
+```{r}
+library('tidyverse')
+library('knitr')
+data("iris")
+force(iris)
+long_iris <- pivot_longer(iris, cols = 1:4, names_to = "Trait", values_to = "Size")
+```
+
+Here I load the *tidyverse* library, then, I load the *iris* data set
+and covert it to the long format with the `pivot_longer()` function. I
+also load the knitr library for formatting my results later.
+
+# Task 2
+
+## Task 2.1
+
+```{r}
+#| message: false
+mean_iris <- long_iris %>% 
+group_by(Species, Trait) %>% 
+summarise(MeanValue = mean(Size))
+```
+
+Here, I first group my values by *Species* and *Trait* before
+calculating the mean lengths and widths and putting them into a new
+table **mean_iris**.
+
+## Task 2.2
+
+```{r}
+#| message: false
+Max_Min_iris <- long_iris %>% 
+filter(Species %in% c('virginica', 'versicolor')) %>% 
+separate(col = Trait, into = c('Part', 'Measurement')) %>% 
+group_by(Species, Part, Measurement) %>% 
+summarise(Max = max(Size), Min = min(Size))
+```
+
+Now, I select only the **Virginica** and **Versicolor** species from the
+*long_iris* table using the `filter()` function. Afterward, I separate
+the *Trait* column and group the data by *Species*, *Part* and
+*Measurement* before finding the max and min values inside the
+`summarise()` function.
+
+## Task 2.3
+
+```{r}
+#| message: false
+counted_iris <- long_iris %>% 
+full_join(mean_iris) %>% 
+filter(Size > MeanValue) %>% 
+group_by(Species, Trait) %>% 
+count(name = 'Amount of reads above mean')
+```
+
+In this code chunk I start by joining the *long_iris* table, to the
+*mean_iris* table with the standard condition which is
+`join_by(Species, Trait)`. Then, I filter out the reads that are below
+the mean value, leaving me with only the ones that are wider and longer
+than the mean values. I then group the reads by *Species* and *Trait*,
+finishing by counting the reads with the `count()` function.
+
+# Results
+
+```{r}
+kable(head(long_iris))
+kable(head(mean_iris,12))
+kable(head(Max_Min_iris,8))
+kable(head(counted_iris,12))
+```
